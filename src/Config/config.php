@@ -4,7 +4,7 @@ return [
 
     // Flowdock channel
     'source_tokens' => array(
-        'deployment' => '6d9f951d3db41ee9fa27933f414b60bd',
+        '' => '',
     ),
 
     // Message
