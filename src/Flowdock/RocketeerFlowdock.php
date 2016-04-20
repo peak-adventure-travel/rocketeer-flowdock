@@ -9,11 +9,6 @@ use Rocketeer\Services\TasksHandler;
 class RocketeerFlowdock extends AbstractPlugin
 {
 
-    const EXTERNAL_THREAD_ID_PREFIX = 'rocketeer:deploy:';
-
-    /** @var string */
-    private $external_thread_id = NULL;
-
     /**
      * RocketeerFlowdock constructor.
      *
@@ -24,7 +19,6 @@ class RocketeerFlowdock extends AbstractPlugin
         parent::__construct($app);
 
         $this->configurationFolder = __DIR__ . '/../config';
-        $this->external_thread_id = self::EXTERNAL_THREAD_ID_PREFIX . date('YmdHis');
     }
 
     /**
@@ -34,23 +28,26 @@ class RocketeerFlowdock extends AbstractPlugin
      */
     public function onQueue(TasksHandler $queue)
     {
-
-
-        $queue->before('deploy', function ($task) {
-            // TODO: Add deployment has started to Flowdock
-
-            foreach($this->config->get('rocketeerflowdock:source_tokens') as $flow_token) {
-                $message = new RocketeerFlowdockMessage($flow_token);
-                $message->queueNotify($this->external_thread_id);
+        $queue->before('deploy', function () {
+            foreach ($this->config->get('rocketeer-flowdock:source_tokens') as $source_token) {
+                $message = new RocketeerFlowdockMessage($source_token);
+                $message->queueNotify();
             }
         });
 
-        $queue->after('deploy', function ($task) {
-            // TODO: Add deployment was successful to Flowdock
+        $queue->after('deploy', function () {
+            foreach ($this->config->get('rocketeer-flowdock:source_tokens') as $source_token) {
+                $message = new RocketeerFlowdockMessage($source_token);
+                $message->queueNotify();
+            }
         });
 
-        $queue->after('deploy.halt', function ($task) {
-            // TODO: Add deployment was unsuccessful to Flowdock
+        $queue->after('deploy.halt', function () {
+            foreach ($this->config->get('rocketeer-flowdock:source_tokens') as $source_token) {
+                $message = new RocketeerFlowdockMessage($source_token);
+                $message->queueNotify();
+            }
         });
     }
+
 }

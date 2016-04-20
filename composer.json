@@ -1,19 +1,24 @@
 {
-    "name": "liamamos-intrepid/rocketeer-flowdock",
-    "description": "Flowdock notification plugin for Rocketeer",
-    "require": {
-        "php": ">=5.4.0",
-        "anahkiasen/rocketeer": "^2.2",
-        "illuminate/support": "~4.2",
-        "guzzlehttp/guzzle": "^6.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.4"
-    },
-    "authors": [
-        {
-            "name": "Liam Amos",
-            "email": "liam.amos@intrepidtravel.com"
-        }
-    ]
+  "name": "liamamos-intrepid/rocketeer-flowdock",
+  "description": "Flowdock notification plugin for Rocketeer",
+  "require": {
+    "php": ">=5.4.0",
+    "anahkiasen/rocketeer": "^2.2",
+    "illuminate/support": "~4.2",
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.4"
+  },
+  "authors": [
+    {
+      "name": "Liam Amos",
+      "email": "liam.amos@intrepidtravel.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rocketeer\\Plugins\\Flowdock\\": "src/Flowdock"
+    }
+  }
 }
