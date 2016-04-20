@@ -24,7 +24,7 @@ class RocketeerFlowdockMessage
      * @param string $flow_token Your source_token provided after adding the RocketeerFlowdock integration
      * @param Client $client HTTP Client
      */
-    public function __construct($flow_token, $client = NULL)
+    public function __construct($flow_token, $external_thread_id, $client = NULL)
     {
         if($client == NULL) {
             $client = new Client();
@@ -32,7 +32,7 @@ class RocketeerFlowdockMessage
 
         $this->flow_token = $flow_token;
         $this->client = $client;
-        $this->external_thread_id = self::EXTERNAL_THREAD_ID_PREFIX . date('YmdHis');
+        $this->external_thread_id = $external_thread_id;
     }
 
     /**
@@ -42,10 +42,14 @@ class RocketeerFlowdockMessage
      * @return bool
      * @throws \Exception
      */
-    public function queueNotify($thread_title = NULL, $thread_body = NULL, $user = NULL)
+    public function queueNotify($title = NULL, $thread_title = NULL, $thread_body = NULL, $user = NULL)
     {
         if($user == NULL) {
             $user = 'Rocketeer';
+        }
+
+        if($title == NULL) {
+            $title = "Rocketeer Deployment";
         }
 
         if($thread_title == NULL) {
@@ -53,7 +57,7 @@ class RocketeerFlowdockMessage
         }
 
         if($thread_body == NULL) {
-            $thread_body = "";
+            $thread_body = "There is currently no message configured";
         }
 
         $body = json_encode(
@@ -63,7 +67,7 @@ class RocketeerFlowdockMessage
                 'author' => array(
                     'name' => $user,
                 ),
-                'title' => $thread_title,
+                'title' => $title,
                 'external_thread_id' => $this->external_thread_id,
                 'thread' => array(
                     'title' => $thread_title,
