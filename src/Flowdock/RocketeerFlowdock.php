@@ -47,14 +47,22 @@ class RocketeerFlowdock extends AbstractPlugin
     public function onQueue(TasksHandler $queue)
     {
         $queue->before('deploy', function ($task) {
+            $counter = 0;
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
+                $task->command->info("BEFORE DEPLOY #" . $counter);
+                $counter++;
+
                 $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
                 $message->notify($task, $task->config->get('rocketeer-flowdock::deploy_before'));
             }
         });
 
         $queue->after('deploy', function ($task) {
+            $counter = 0;
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
+                $task->command->info("BEFORE DEPLOY #" . $counter);
+                $counter++;
+
                 $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
                 $message->notify($task, $task->config->get('rocketeer-flowdock::deploy_after'));
             }
