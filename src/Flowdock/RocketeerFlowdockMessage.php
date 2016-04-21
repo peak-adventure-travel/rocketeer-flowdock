@@ -49,7 +49,7 @@ class RocketeerFlowdockMessage
         if($thread_body == NULL) {
             $thread_body = "There is currently no message configured";
         } else {
-            $this->formatThreadBody($task, $thread_body);
+            $thread_body = $this->formatThreadBody($task, $thread_body);
         }
 
         $body = json_encode(
@@ -95,8 +95,6 @@ class RocketeerFlowdockMessage
 
         $applicationName = ($task->config->get('rocketeer-flowdock::application') != '') ? $task->config->get('rocketeer-flowdock::application') : $task->rocketeer->getApplicationName();
         $thread_body = str_replace("{3}", $applicationName, $thread_body);
-
-        $task->
 
         $thread_body = str_replace("{4}", " " . json_encode($task->connections->getConnection()) . " ", $thread_body);
 

@@ -59,7 +59,7 @@ class RocketeerFlowdock extends AbstractPlugin
                 $message->notify($task, $task->config->get('rocketeer-flowdock::deploy_after'));
             }
         });
-/*
+
         $queue->before('deploy.halt', function ($task) {
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
                 $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
@@ -73,7 +73,7 @@ class RocketeerFlowdock extends AbstractPlugin
                 $message->notify($task, $task->config->get('rocketeer-flowdock::rollback_after'));
             }
         });
-*/
+
     }
 
 }
