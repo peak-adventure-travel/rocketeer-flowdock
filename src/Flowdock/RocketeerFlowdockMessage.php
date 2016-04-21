@@ -59,11 +59,11 @@ class RocketeerFlowdockMessage
                 'author' => array(
                     'name' => $task->config->get('rocketeer-flowdock::user'),
                 ),
-                'title' => $task->config->get('rocketeer-flowdock::title'),
+                'title' => $thread_body,
                 'external_thread_id' => $this->external_thread_id,
                 'thread' => array(
-                    'title' => $thread_body,
-                    'body' => $thread_body,
+                    'title' => $task->config->get('rocketeer-flowdock::title'),
+                    'body' => "",
                 ),
             ), JSON_PRETTY_PRINT
         );

@@ -20,9 +20,9 @@ return [
     // 2: Branch
     // 3: Repository
     // 4: Connection and stage
-    'deploy_before'   => '{1} started deploying branch "{2}" on "{3} {4}" :rocket:',
-    'deploy_after'    => '{1} finished deploying branch "{2}" on "{3} {4}" :rocket:',
-    'rollback_before' => '{1} started rolling back branch "{2}" on "{3} {4}" :rocket:',
-    'rollback_after'  => '{1} finished rolling back branch "{2}" on "{3} {4}" :rocket:',
+    'deploy_before'   => '{1} started deploying branch "{2}" on {3} {4} :rocket:',
+    'deploy_after'    => '{1} finished deploying branch "{2}" on {3} {4} :rocket:',
+    'rollback_before' => '{1} started rolling back branch "{2}" on {3} {4} :rocket:',
+    'rollback_after'  => '{1} finished rolling back branch "{2}" on {3} {4} :rocket:',
 
 ];
