@@ -94,7 +94,13 @@ class RocketeerFlowdockMessage
         } else {
             $thread_body = str_replace("{3}", $task->rocketeer->getApplicationName(), $thread_body);
         }
-        $thread_body = str_replace("{4}", $task->rocketeer->getOption('on'), $thread_body);
+
+        $branches = NULL;
+        foreach($task->rocketeer->getOption('on') as $option) {
+            $branches = $branches . $option . ", ";
+        }
+
+        $thread_body = str_replace("{4}", $branches, $thread_body);
 
         return $thread_body;
     }
