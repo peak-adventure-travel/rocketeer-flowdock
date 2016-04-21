@@ -96,7 +96,9 @@ class RocketeerFlowdockMessage
         $applicationName = ($task->config->get('rocketeer-flowdock::application') != '') ? $task->config->get('rocketeer-flowdock::application') : $task->rocketeer->getApplicationName();
         $thread_body = str_replace("{3}", $applicationName, $thread_body);
 
-        $thread_body = str_replace("{4}", " " . json_encode($task->rocketeer->getConnection()) . " ", $thread_body);
+        $task->
+
+        $thread_body = str_replace("{4}", " " . json_encode($task->connections->getConnection()) . " ", $thread_body);
 
         return $thread_body;
     }
