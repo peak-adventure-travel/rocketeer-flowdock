@@ -6,13 +6,10 @@ return [
     'source_tokens' => array(
         '' => '',
     ),
-    'title' => 'Rocketeer Deployment',
-    'thread_title' => 'Rocketeer Deployment',
-
-    // Rocketeer Deployment defaults
-    'default_branch' => 'develop',
     'user' => 'Rocketeer',
     'application' => '', // Leave blank to use default Rocketeer 'application_name'
+    'default_branch' => 'develop',
+    'thread_title' => 'Rocketeer Deployment',
 
     // Message
     // You can use the following variables :

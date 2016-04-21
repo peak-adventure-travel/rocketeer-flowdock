@@ -46,11 +46,7 @@ class RocketeerFlowdockMessage
      */
     public function notify($task, $thread_body = NULL)
     {
-        if($thread_body == NULL) {
-            $thread_body = "There is currently no message configured";
-        } else {
-            $thread_body = $this->formatThreadBody($task, $thread_body);
-        }
+        $thread_body = ($thread_body == NULL) ? "There is currently no message configured" : $this->formatThreadBody($task, $thread_body);
 
         $body = json_encode(
             array(
@@ -62,7 +58,7 @@ class RocketeerFlowdockMessage
                 'title' => $thread_body,
                 'external_thread_id' => $this->external_thread_id,
                 'thread' => array(
-                    'title' => $task->config->get('rocketeer-flowdock::title'),
+                    'title' => $task->config->get('rocketeer-flowdock::thread_title'),
                     'body' => "",
                 ),
             ), JSON_PRETTY_PRINT
