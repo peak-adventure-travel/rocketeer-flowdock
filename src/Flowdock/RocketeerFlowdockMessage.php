@@ -87,14 +87,14 @@ class RocketeerFlowdockMessage
      */
     public function formatThreadBody($task, $thread_body) {
         $thread_body = str_replace("{1}", $task->config->get('rocketeer-flowdock::user'), $thread_body);
-        $thread_body = str_replace("{2}", $task->app->getOption('branch'), $thread_body);
+        $thread_body = str_replace("{2}", $task->rocketeer->getOption('branch'), $thread_body);
 
         if($task->config->get('rocketeer-flowdock::application') != '') {
             $thread_body = str_replace("{3}", $task->config->get('rocketeer-flowdock::application'), $thread_body);
         } else {
             $thread_body = str_replace("{3}", $task->rocketeer->getApplicationName(), $thread_body);
         }
-        $thread_body = str_replace("{4}", $task->app->getOption('on'), $thread_body);
+        $thread_body = str_replace("{4}", $task->rocketeer->getOption('on'), $thread_body);
 
         return $thread_body;
     }
