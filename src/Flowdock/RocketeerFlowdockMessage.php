@@ -22,6 +22,7 @@ class RocketeerFlowdockMessage
 
     /**
      * @param string $flow_token Your source_token provided after adding the RocketeerFlowdock integration
+     * @param string @external_thread_id The ID to pass to flowdock to allow for clustered notifications
      * @param Client $client HTTP Client
      */
     public function __construct($flow_token, $external_thread_id, $client = NULL)
@@ -38,24 +39,13 @@ class RocketeerFlowdockMessage
     /**
      * Notifies the Flowdock channel of a deployment stage being initiated
      *
-     * @param string $user Name of the user announcing the notification
+     * @param Closure @task
+     * @param string $thread_body
      * @return bool
      * @throws \Exception
      */
-    public function queueNotify($title = NULL, $thread_title = NULL, $thread_body = NULL, $user = NULL)
+    public function notify($task, $thread_body = NULL)
     {
-        if($user == NULL) {
-            $user = 'Rocketeer';
-        }
-
-        if($title == NULL) {
-            $title = "Rocketeer Deployment";
-        }
-
-        if($thread_title == NULL) {
-            $thread_title = "Rocketeer Deployment";
-        }
-
         if($thread_body == NULL) {
             $thread_body = "There is currently no message configured";
         }
@@ -65,13 +55,13 @@ class RocketeerFlowdockMessage
                 'flow_token' => $this->flow_token,
                 'event' => 'activity',
                 'author' => array(
-                    'name' => $user,
+                    'name' => $task->config->get('rocketeer-flowdock::user'),
                 ),
-                'title' => $title,
+                'title' => $task->config->get('rocketeer-flowdock::title'),
                 'external_thread_id' => $this->external_thread_id,
                 'thread' => array(
-                    'title' => $thread_title,
-                    'body' => $thread_body,
+                    'title' => $task->config->get('rocketeer-flowdock::thread_title'),
+                    'body' => $this->formatThreadBody($task, $thread_body),
                 ),
             ), JSON_PRETTY_PRINT
         );
@@ -86,5 +76,26 @@ class RocketeerFlowdockMessage
         }
 
         return true;
+    }
+
+    /**
+     * Formats the thread body with variables as stated in the src/config/config.php
+     *
+     * @param Closure @task
+     * @param string $thread_body
+     * @return string
+     */
+    public function formatThreadBody($task, $thread_body) {
+        $thread_body = str_replace("{1}", $task->config->get('rocketeer-flowdock::user'), $thread_body);
+        $thread_body = str_replace("{2}", $task->app->getOption('branch'), $thread_body);
+
+        if($task->config->get('rocketeer-flowdock::application') != '') {
+            $thread_body = str_replace("{3}", $task->config->get('rocketeer-flowdock::application'), $thread_body);
+        } else {
+            $thread_body = str_replace("{3}", $task->rocketeer->getApplicationName(), $thread_body);
+        }
+        $thread_body = str_replace("{4}", $task->app->getOption('on'), $thread_body);
+
+        return $thread_body;
     }
 }

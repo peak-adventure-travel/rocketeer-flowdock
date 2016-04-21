@@ -29,7 +29,7 @@ class RocketeerFlowdockMessageTest extends \PHPUnit_Framework_TestCase
     public function testOnQueue()
     {
         $message = new RocketeerFlowdockMessage(getenv('SOURCE_TOKEN'), date('YmdHis'));
-        $result = $message->queueNotify(null, "PHPUnit Test", "Testing API PUSH via PHPUnit");
+        $result = $message->notify(null, "PHPUnit Test", "Testing API PUSH via PHPUnit");
 
         $this->assertTrue($result);
     }
