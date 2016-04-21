@@ -2,14 +2,17 @@
 
 return [
 
-    // Flowdock channel
+    // Flowdock channel defaults
     'source_tokens' => array(
         '' => '',
     ),
-    'user' => 'Rocketeer',
-    'application' => '', // Leave blank to use default Rocketeer 'application_name'
     'title' => 'Rocketeer Deployment',
     'thread_title' => 'Rocketeer Deployment',
+
+    // Rocketeer Deployment defaults
+    'default_branch' => 'develop',
+    'user' => 'Rocketeer',
+    'application' => '', // Leave blank to use default Rocketeer 'application_name'
 
     // Message
     // You can use the following variables :

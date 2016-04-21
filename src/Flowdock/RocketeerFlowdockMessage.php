@@ -87,21 +87,20 @@ class RocketeerFlowdockMessage
      */
     public function formatThreadBody($task, $thread_body) {
         $thread_body = str_replace("{1}", $task->config->get('rocketeer-flowdock::user'), $thread_body);
-        $thread_body = str_replace("{2}", $task->rocketeer->getOption('branch'), $thread_body);
 
-        if($task->config->get('rocketeer-flowdock::application') != '') {
-            $thread_body = str_replace("{3}", $task->config->get('rocketeer-flowdock::application'), $thread_body);
-        } else {
-            $thread_body = str_replace("{3}", $task->rocketeer->getApplicationName(), $thread_body);
-        }
-/*
+        $branch = ($task->rocketeer->getOption('branch') != '') ? $task->rocketeer->getOption('branch') : $task->rocketeer->getRepositoryBranch();
+        $thread_body = str_replace("{2}", $branch, $thread_body);
+
+        $applicationName = ($task->config->get('rocketeer-flowdock::application') != '') ? $task->config->get('rocketeer-flowdock::application') : $task->rocketeer->getApplicationName();
+        $thread_body = str_replace("{3}", $applicationName, $thread_body);
+
         $branches = NULL;
         foreach($task->rocketeer->getOption('on') as $option) {
             $branches = $branches . $option . ", ";
         }
 
-        $thread_body = str_replace("{4}", $branches, $thread_body);
-*/
+        $thread_body = str_replace("{4}", " " . json_encode($branches) . " ", $thread_body);
+
         return $thread_body;
     }
 }
