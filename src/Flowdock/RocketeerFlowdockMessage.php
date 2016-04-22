@@ -102,7 +102,7 @@ class RocketeerFlowdockMessage
             $application = $task->rocketeer->getApplicationName();
         }
 
-        $pattern = [':user', ':branch', ':repo', ':conn'];
+        $pattern = ['(:user)', '(:branch)', '(:repo)', '(:conn)'];
         $replacements = [
             ':user' => $task->config->get('rocketeer-flowdock::user'),
             ':branch' => $branch,
