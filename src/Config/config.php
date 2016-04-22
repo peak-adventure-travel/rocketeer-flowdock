@@ -3,9 +3,9 @@
 return [
 
     // Flowdock channel defaults
-    'source_tokens' => array(
+    'source_tokens' => [
         '' => '',
-    ),
+    ],
     'user' => 'Rocketeer',
     'application' => '', // Leave blank to use default Rocketeer 'application_name'
     'default_branch' => 'develop',
@@ -13,13 +13,13 @@ return [
 
     // Message
     // You can use the following variables :
-    // 1: User deploying
-    // 2: Branch
-    // 3: Repository
-    // 4: Connection and stage
-    'deploy_before'   => '{1} started deploying branch "{2}" on {3} {4} :rocket:',
-    'deploy_after'    => '{1} finished deploying branch "{2}" on {3} {4} :rocket:',
-    'rollback_before' => '{1} started rolling back branch "{2}" on {3} {4} :rocket:',
-    'rollback_after'  => '{1} finished rolling back branch "{2}" on {3} {4} :rocket:',
+    // :user = User deploying
+    // :branch = Branch
+    // :repo = Repository
+    // :conn = Connection and stage
+    'deploy_before'   => ':user started deploying branch ":branch" on :repo :conn',
+    'deploy_after'    => ':user finished deploying branch ":branch" on :repo :conn',
+    'rollback_before' => ':user started rolling back branch ":branch" on :repo :conn',
+    'rollback_after'  => ':user finished rolling back branch ":branch" on :repo :conn',
 
 ];

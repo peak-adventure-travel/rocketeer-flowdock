@@ -12,9 +12,9 @@ class RocketeerFlowdock extends AbstractPlugin
     protected $external_thread_id = NULL;
 
     /**
-     * RocketeerFlowdock constructor.
+     * RocketeerFlowdock constructor
      *
-     * @param \Illuminate\Container\Container $app Application Dependency Injection Container
+     * @param Container $app Application Dependency Injection Container
      */
     public function __construct(Container $app)
     {
@@ -40,9 +40,9 @@ class RocketeerFlowdock extends AbstractPlugin
     }
 
     /**
-     * Register Tasks with Rocketeer.
+     * Register Tasks with Rocketeer
      *
-     * @param \Rocketeer\Services\TasksHandler $queue
+     * @param TasksHandler $queue
      */
     public function onQueue(TasksHandler $queue)
     {

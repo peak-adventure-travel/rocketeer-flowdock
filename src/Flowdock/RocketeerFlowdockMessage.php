@@ -3,6 +3,7 @@
 namespace Rocketeer\Plugins\Flowdock;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 
 class RocketeerFlowdockMessage
@@ -21,13 +22,15 @@ class RocketeerFlowdockMessage
     private $external_thread_id = NULL;
 
     /**
+     * RocketeerFlowdockMessage constructor
+     *
      * @param string $flow_token Your source_token provided after adding the RocketeerFlowdock integration
      * @param string @external_thread_id The ID to pass to flowdock to allow for clustered notifications
-     * @param Client $client HTTP Client
+     * @param ClientInterface $client HTTP Client Interface
      */
-    public function __construct($flow_token, $external_thread_id, $client = NULL)
+    public function __construct($flow_token, $external_thread_id, ClientInterface $client = NULL)
     {
-        if($client == NULL) {
+        if ($client == NULL) {
             $client = new Client();
         }
 
@@ -46,30 +49,30 @@ class RocketeerFlowdockMessage
      */
     public function notify($task, $thread_body = NULL)
     {
-        $thread_body = ($thread_body == NULL) ? "There is currently no message configured" : $this->formatThreadBody($task, $thread_body);
+        if ($thread_body == NULL) {
+            $thread_body = "There is currently no message configured";
+        }
 
-        $body = json_encode(
-            array(
-                'flow_token' => $this->flow_token,
-                'event' => 'activity',
-                'author' => array(
-                    'name' => $task->config->get('rocketeer-flowdock::user'),
-                ),
-                'title' => $thread_body,
-                'external_thread_id' => $this->external_thread_id,
-                'thread' => array(
-                    'title' => $task->config->get('rocketeer-flowdock::thread_title'),
-                    'body' => "",
-                ),
-            ), JSON_PRETTY_PRINT
-        );
+        $body = json_encode([
+            'flow_token' => $this->flow_token,
+            'event' => 'activity',
+            'author' => [
+                'name' => $task->config->get('rocketeer-flowdock::user')
+            ],
+            'title' => $this->formatThreadBody($task, $thread_body),
+            'external_thread_id' => $this->external_thread_id,
+            'thread' => [
+                'title' => $task->config->get('rocketeer-flowdock::thread_title'),
+                'body' => ''
+            ]
+        ]);
 
-        $headers = array('Content-Type' => 'application/json');
+        $headers = ['Content-Type' => 'application/json'];
 
         $request = new Request('POST', self::MESSAGE_API, $headers, $body);
         $response = $this->client->send($request);
 
-        if($response->getStatusCode() != 202) {
+        if ($response->getStatusCode() != 202) {
             throw new \Exception("Error: HTTP " . $response->getStatusCode() . " with message " . $response->getReasonPhrase());
         }
 
@@ -83,16 +86,31 @@ class RocketeerFlowdockMessage
      * @param string $thread_body
      * @return string
      */
-    public function formatThreadBody($task, $thread_body) {
-        $thread_body = str_replace("{1}", $task->config->get('rocketeer-flowdock::user'), $thread_body);
+    public function formatThreadBody($task, $thread_body)
+    {
+        $branch = NULL;
+        if ($task->rocketeer->getOption('branch') != '') {
+            $branch = $task->rocketeer->getOption('branch');
+        } else {
+            $branch = $task->config->get('rocketeer-flowdock::default_branch');
+        }
 
-        $branch = ($task->rocketeer->getOption('branch') != '') ? $task->rocketeer->getOption('branch') : $task->config->get('rocketeer-flowdock::default_branch');
-        $thread_body = str_replace("{2}", $branch, $thread_body);
+        $application = NULL;
+        if ($task->config->get('rocketeer-flowdock::application') != '') {
+            $application = $task->config->get('rocketeer-flowdock::application');
+        } else {
+            $application = $task->rocketeer->getApplicationName();
+        }
 
-        $applicationName = ($task->config->get('rocketeer-flowdock::application') != '') ? $task->config->get('rocketeer-flowdock::application') : $task->rocketeer->getApplicationName();
-        $thread_body = str_replace("{3}", $applicationName, $thread_body);
+        $pattern = [':user', ':branch', ':repo', ':conn'];
+        $replacements = [
+            ':user' => $task->config->get('rocketeer-flowdock::user'),
+            ':branch' => $branch,
+            ':repo' => $application,
+            ':conn' => $task->connections->getConnection()
+        ];
 
-        $thread_body = str_replace("{4}", " " . json_encode($task->connections->getConnection()) . " ", $thread_body);
+        $thread_body = preg_replace($pattern, $replacements, $thread_body);
 
         return $thread_body;
     }
