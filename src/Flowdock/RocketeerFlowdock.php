@@ -33,9 +33,6 @@ class RocketeerFlowdock extends AbstractPlugin
      */
     public function register(Container $app)
     {
-        $app->bind('RocketeerFlowdock', function($app) {
-            return new RocketeerFlowdock($app);
-        });
         return $app;
     }
 

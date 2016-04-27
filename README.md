@@ -5,7 +5,7 @@ events have triggered, as well as any rollbacks that need to occur.
 
 ## Installation
 
-1. In your current project directory you'll need to install the project via :
+In your current project directory you'll need to install the project via :
 ```bash
 composer install liamamos-intrepid/rocketeer-flowdock --dev
 ```
