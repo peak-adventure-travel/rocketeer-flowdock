@@ -13,54 +13,54 @@ class RocketeerFlowdockMessage
     const EXTERNAL_THREAD_ID_PREFIX = 'rocketeer:deploy:';
 
     /** @var string */
-    private $flow_token = NULL;
+    private $flowToken = NULL;
 
     /** @var Client */
     private $client = NULL;
 
     /** @var string */
-    private $external_thread_id = NULL;
+    private $externalThreadID = NULL;
 
     /**
      * RocketeerFlowdockMessage constructor
      *
-     * @param string $flow_token Your source_token provided after adding the RocketeerFlowdock integration
+     * @param string $flowToken Your source_token provided after adding the RocketeerFlowdock integration
      * @param string @external_thread_id The ID to pass to flowdock to allow for clustered notifications
      * @param ClientInterface $client HTTP Client Interface
      */
-    public function __construct($flow_token, $external_thread_id, ClientInterface $client = NULL)
+    public function __construct($flowToken, $externalThreadID, ClientInterface $client = NULL)
     {
         if ($client == NULL) {
             $client = new Client();
         }
 
-        $this->flow_token = $flow_token;
+        $this->flowToken = $flowToken;
         $this->client = $client;
-        $this->external_thread_id = $external_thread_id;
+        $this->externalThreadID = $externalThreadID;
     }
 
     /**
      * Notifies the Flowdock channel of a deployment stage being initiated
      *
      * @param Closure @task
-     * @param string $thread_body
+     * @param string $threadBody
      * @return bool
      * @throws \Exception
      */
-    public function notify($task, $thread_body = NULL)
+    public function notify($task, $threadBody = NULL)
     {
-        if ($thread_body == NULL) {
-            $thread_body = "There is currently no message configured";
+        if ($threadBody == NULL) {
+            $threadBody = "There is currently no message configured";
         }
 
         $body = json_encode([
-            'flow_token' => $this->flow_token,
+            'flow_token' => $this->flowToken,
             'event' => 'activity',
             'author' => [
-                'name' => $task->config->get('rocketeer-flowdock::user')
+                'name' => get_current_user(),
             ],
-            'title' => $this->formatThreadBody($task, $thread_body),
-            'external_thread_id' => $this->external_thread_id,
+            'title' => $this->formatThreadBody($task, $threadBody),
+            'external_thread_id' => $this->externalThreadID,
             'thread' => [
                 'title' => $task->config->get('rocketeer-flowdock::thread_title'),
                 'body' => ''
@@ -83,18 +83,11 @@ class RocketeerFlowdockMessage
      * Formats the thread body with variables as stated in the src/config/config.php
      *
      * @param Closure @task
-     * @param string $thread_body
+     * @param string $threadBody
      * @return string
      */
-    public function formatThreadBody($task, $thread_body)
+    public function formatThreadBody($task, $threadBody)
     {
-        $branch = NULL;
-        if ($task->rocketeer->getOption('branch') != '') {
-            $branch = $task->rocketeer->getOption('branch');
-        } else {
-            $branch = $task->config->get('rocketeer-flowdock::default_branch');
-        }
-
         $application = NULL;
         if ($task->config->get('rocketeer-flowdock::application') != '') {
             $application = $task->config->get('rocketeer-flowdock::application');
@@ -105,13 +98,13 @@ class RocketeerFlowdockMessage
         $pattern = ['(:user)', '(:branch)', '(:repo)', '(:conn)'];
         $replacements = [
             ':user' => $task->config->get('rocketeer-flowdock::user'),
-            ':branch' => $branch,
+            ':branch' => $task->rocketeer->getOption('branch'),
             ':repo' => $application,
             ':conn' => $task->connections->getConnection()
         ];
 
-        $thread_body = preg_replace($pattern, $replacements, $thread_body);
+        $threadBody = preg_replace($pattern, $replacements, $threadBody);
 
-        return $thread_body;
+        return $threadBody;
     }
 }

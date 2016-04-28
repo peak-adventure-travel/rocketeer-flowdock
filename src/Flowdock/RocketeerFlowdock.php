@@ -9,7 +9,7 @@ use Rocketeer\Services\TasksHandler;
 class RocketeerFlowdock extends AbstractPlugin
 {
     /** @var string */
-    protected $external_thread_id = NULL;
+    protected $externalThreadID = NULL;
 
     /**
      * RocketeerFlowdock constructor
@@ -21,7 +21,7 @@ class RocketeerFlowdock extends AbstractPlugin
         parent::__construct($app);
 
         $this->configurationFolder = __DIR__ . '/../config';
-        $this->external_thread_id = date('YmdHis');
+        $this->externalThreadID = date('YmdHis');
     }
 
     /**
@@ -33,6 +33,7 @@ class RocketeerFlowdock extends AbstractPlugin
      */
     public function register(Container $app)
     {
+        $app->bind('flowdock');
         return $app;
     }
 
@@ -43,34 +44,26 @@ class RocketeerFlowdock extends AbstractPlugin
      */
     public function onQueue(TasksHandler $queue)
     {
-        $queue->before('deploy', function ($task) {
-            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
-                $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::deploy_before'));
+        $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_before'), function ($task) {
+            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
+                $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
+                $message->notify($task, $task->config->get('rocketeer-flowdock::message_before'));
             }
         });
 
-        $queue->after('deploy', function ($task) {
-            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
-                $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::deploy_after'));
+        $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_after'), function ($task) {
+            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
+                $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
+                $message->notify($task, $task->config->get('rocketeer-flowdock::message_after'));
             }
         });
 
-        $queue->before('deploy.halt', function ($task) {
-            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
-                $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::rollback_before'));
+        $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_rollback'), function ($task) {
+            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
+                $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
+                $message->notify($task, $task->config->get('rocketeer-flowdock::message_rollback'));
             }
         });
-
-        $queue->after('deploy.halt', function ($task) {
-            foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $source_token) {
-                $message = new RocketeerFlowdockMessage($source_token, $this->external_thread_id);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::rollback_after'));
-            }
-        });
-
     }
 
 }
