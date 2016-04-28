@@ -88,6 +88,14 @@ class RocketeerFlowdockMessage
      */
     public function formatThreadBody($task, $threadBody)
     {
+        $branch = NULL;
+        if ($task->rocketeer->getOption('branch') == '') {
+            $branch = $task->config->get('rocketeer-flowdock::branch');
+        } else {
+            $branch = $task->rocketeer->getOption('branch');
+        }
+
+
         $application = NULL;
         if ($task->config->get('rocketeer-flowdock::application') != '') {
             $application = $task->config->get('rocketeer-flowdock::application');
@@ -98,7 +106,7 @@ class RocketeerFlowdockMessage
         $pattern = ['(:user)', '(:branch)', '(:repo)', '(:conn)'];
         $replacements = [
             ':user' => $task->config->get('rocketeer-flowdock::user'),
-            ':branch' => $task->rocketeer->getOption('branch'),
+            ':branch' => $branch,
             ':repo' => $application,
             ':conn' => $task->connections->getConnection()
         ];

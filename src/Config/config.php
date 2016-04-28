@@ -7,6 +7,7 @@ return [
         '' => '',
     ],
     'application' => '', // Leave blank to use default Rocketeer 'application_name'
+    'branch' => 'develop',
     'thread_title' => 'Rocketeer Deployment',
 
     // Deployment
