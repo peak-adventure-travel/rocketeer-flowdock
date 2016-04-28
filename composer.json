@@ -1,5 +1,5 @@
 {
-  "name": "liamamos-intrepid/rocketeer-flowdock",
+  "name": "peak-adventure-travel/rocketeer-flowdock",
   "description": "Flowdock notification plugin for Rocketeer",
   "require": {
     "php": ">=5.4.0",
