@@ -6,3 +6,6 @@ vendor
 
 # For macs
 .DS_Store
+
+# PHPUnit
+phpunit.xml
