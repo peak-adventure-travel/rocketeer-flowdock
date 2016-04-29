@@ -53,13 +53,15 @@ class RocketeerFlowdockMessage
             $threadBody = "There is currently no message configured";
         }
 
+        $title = $this->formatThreadBody($task->rocketeer, $task->config, $task->connections, $threadBody);
+
         $body = json_encode([
             'flow_token' => $this->flowToken,
             'event' => 'activity',
             'author' => [
                 'name' => get_current_user(),
             ],
-            'title' => $this->formatThreadBody($task, $threadBody),
+            'title' => $title,
             'external_thread_id' => $this->externalThreadID,
             'thread' => [
                 'title' => $task->config->get('rocketeer-flowdock::thread_title'),
@@ -82,33 +84,35 @@ class RocketeerFlowdockMessage
     /**
      * Formats the thread body with variables as stated in the src/config/config.php
      *
-     * @param Closure @task
+     * @param \Rocketeer\Rocketeer $rocketeer
+     * @param \Illuminate\Config\Repository $config
+     * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
      * @param string $threadBody
+     *
      * @return string
      */
-    public function formatThreadBody($task, $threadBody)
+    private function formatThreadBody($rocketeer, $config, $connections, $threadBody)
     {
         $branch = NULL;
-        if ($task->rocketeer->getOption('branch') == '') {
-            $branch = $task->config->get('rocketeer-flowdock::branch');
+        if ($rocketeer->getOption('branch') == '') {
+            $branch = $config->get('rocketeer-flowdock::branch');
         } else {
-            $branch = $task->rocketeer->getOption('branch');
+            $branch = $rocketeer->getOption('branch');
         }
 
-
         $application = NULL;
-        if ($task->config->get('rocketeer-flowdock::application') != '') {
-            $application = $task->config->get('rocketeer-flowdock::application');
+        if ($config->get('rocketeer-flowdock::application') != '') {
+            $application = $config->get('rocketeer-flowdock::application');
         } else {
-            $application = $task->rocketeer->getApplicationName();
+            $application = $rocketeer->getApplicationName();
         }
 
         $pattern = ['(:user)', '(:branch)', '(:repo)', '(:conn)'];
         $replacements = [
-            ':user' => $task->config->get('rocketeer-flowdock::user'),
+            ':user' => get_current_user(),
             ':branch' => $branch,
             ':repo' => $application,
-            ':conn' => $task->connections->getConnection()
+            ':conn' => $connections->getConnection()
         ];
 
         $threadBody = preg_replace($pattern, $replacements, $threadBody);
