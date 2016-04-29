@@ -1,5 +1,0 @@
-<phpunit>
-    <php>
-        <env name="SOURCE_TOKEN" value="" />
-    </php>
-</phpunit>
