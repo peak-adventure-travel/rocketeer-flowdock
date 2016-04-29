@@ -1,5 +1,8 @@
-# Dependencies
-composer.lock
+# Ignore composer modules
 vendor
+
+# Ignore paths that contain user-generated content
 .idea/
+
+# For macs
 .DS_Store
