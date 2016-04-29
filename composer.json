@@ -1,6 +1,7 @@
 {
   "name": "peak-adventure-travel/rocketeer-flowdock",
   "description": "Flowdock notification plugin for Rocketeer",
+  "license": "MIT",
   "require": {
     "php": ">=5.4.0",
     "anahkiasen/rocketeer": "^2.2",
