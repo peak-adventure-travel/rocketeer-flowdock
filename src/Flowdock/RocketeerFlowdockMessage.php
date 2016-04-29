@@ -45,7 +45,7 @@ class RocketeerFlowdockMessage
      * @param Closure @task
      * @param string $threadBody
      * @return bool
-     * @throws \Exception
+     * @throws FlowdockApiException
      */
     public function notify($task, $threadBody = NULL)
     {
@@ -75,7 +75,7 @@ class RocketeerFlowdockMessage
         $response = $this->client->send($request);
 
         if ($response->getStatusCode() != 202) {
-            throw new \Exception("Error: HTTP " . $response->getStatusCode() . " with message " . $response->getReasonPhrase());
+            throw new FlowdockApiException("Error: HTTP " . $response->getStatusCode() . " with message " . $response->getReasonPhrase());
         }
 
         return true;
