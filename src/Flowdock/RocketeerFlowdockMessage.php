@@ -45,19 +45,19 @@ class RocketeerFlowdockMessage
      * @param \Rocketeer\Rocketeer $rocketeer
      * @param \Illuminate\Config\Repository $config
      * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
-     * @param String|null $threadBody
+     * @param String|null $eventTitle
      *
      * @return bool
      *
      * @throws FlowdockApiException
      */
-    public function notify($rocketeer, $config, $connections, $threadBody = NULL)
+    public function notify($rocketeer, $config, $connections, $eventTitle = NULL)
     {
-        if ($threadBody == NULL) {
-            $threadBody = "There is currently no message configured";
+        if ($eventTitle == NULL) {
+            $eventTitle = "There is currently no message configured";
         }
 
-        $title = $this->formatEventTitle($rocketeer, $config, $connections, $threadBody);
+        $title = $this->formatEventTitle($rocketeer, $config, $connections, $eventTitle);
 
         $body = json_encode([
             'flow_token' => $this->flowToken,
@@ -91,11 +91,11 @@ class RocketeerFlowdockMessage
      * @param \Rocketeer\Rocketeer $rocketeer
      * @param \Illuminate\Config\Repository $config
      * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
-     * @param string $threadBody
+     * @param string $eventTitle
      *
      * @return string
      */
-    private function formatEventTitle($rocketeer, $config, $connections, $threadBody)
+    private function formatEventTitle($rocketeer, $config, $connections, $eventTitle)
     {
         $branch = NULL;
         if ($rocketeer->getOption('branch') == '') {
@@ -119,8 +119,8 @@ class RocketeerFlowdockMessage
             ':conn' => $connections->getConnection()
         ];
 
-        $threadBody = preg_replace($pattern, $replacements, $threadBody);
+        $eventTitle = preg_replace($pattern, $replacements, $eventTitle);
 
-        return $threadBody;
+        return $eventTitle;
     }
 }
