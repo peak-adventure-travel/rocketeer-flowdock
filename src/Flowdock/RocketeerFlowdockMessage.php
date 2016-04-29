@@ -42,18 +42,22 @@ class RocketeerFlowdockMessage
     /**
      * Notifies the Flowdock channel of a deployment stage being initiated
      *
-     * @param Closure @task
-     * @param string $threadBody
+     * @param \Rocketeer\Rocketeer $rocketeer
+     * @param \Illuminate\Config\Repository $config
+     * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
+     * @param String|null $threadBody
+     *
      * @return bool
+     *
      * @throws FlowdockApiException
      */
-    public function notify($task, $threadBody = NULL)
+    public function notify($rocketeer, $config, $connections, $threadBody = NULL)
     {
         if ($threadBody == NULL) {
             $threadBody = "There is currently no message configured";
         }
 
-        $title = $this->formatThreadBody($task->rocketeer, $task->config, $task->connections, $threadBody);
+        $title = $this->formatEventTitle($rocketeer, $config, $connections, $threadBody);
 
         $body = json_encode([
             'flow_token' => $this->flowToken,
@@ -64,7 +68,7 @@ class RocketeerFlowdockMessage
             'title' => $title,
             'external_thread_id' => $this->externalThreadID,
             'thread' => [
-                'title' => $task->config->get('rocketeer-flowdock::thread_title'),
+                'title' => $config->get('rocketeer-flowdock::thread_title'),
                 'body' => ''
             ]
         ]);
@@ -82,7 +86,7 @@ class RocketeerFlowdockMessage
     }
 
     /**
-     * Formats the thread body with variables as stated in the src/config/config.php
+     * Formats the events title with variables as stated in the src/config/config.php
      *
      * @param \Rocketeer\Rocketeer $rocketeer
      * @param \Illuminate\Config\Repository $config
@@ -91,7 +95,7 @@ class RocketeerFlowdockMessage
      *
      * @return string
      */
-    private function formatThreadBody($rocketeer, $config, $connections, $threadBody)
+    private function formatEventTitle($rocketeer, $config, $connections, $threadBody)
     {
         $branch = NULL;
         if ($rocketeer->getOption('branch') == '') {

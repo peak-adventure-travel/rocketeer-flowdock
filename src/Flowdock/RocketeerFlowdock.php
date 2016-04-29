@@ -47,21 +47,36 @@ class RocketeerFlowdock extends AbstractPlugin
         $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_before'), function ($task) {
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::message_before'));
+                $message->notify(
+                    $task->rocketeer,
+                    $task->config,
+                    $task->connections,
+                    $task->config->get('rocketeer-flowdock::message_before')
+                );
             }
         });
 
         $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_after'), function ($task) {
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::message_after'));
+                $message->notify(
+                    $task->rocketeer,
+                    $task->config,
+                    $task->connections,
+                    $task->config->get('rocketeer-flowdock::message_after')
+                );
             }
         });
 
         $queue->listenTo($queue->config->get('rocketeer-flowdock::stage_rollback'), function ($task) {
             foreach ($task->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
-                $message->notify($task, $task->config->get('rocketeer-flowdock::message_rollback'));
+                $message->notify(
+                    $task->rocketeer,
+                    $task->config,
+                    $task->connections,
+                    $task->config->get('rocketeer-flowdock::message_rollback')
+                );
             }
         });
     }
