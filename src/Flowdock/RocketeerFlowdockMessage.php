@@ -15,7 +15,7 @@ class RocketeerFlowdockMessage
     /** @var string */
     private $flowToken = NULL;
 
-    /** @var Client */
+    /** @var ClientInterface */
     private $client = NULL;
 
     /** @var string */
@@ -49,12 +49,13 @@ class RocketeerFlowdockMessage
      *
      * @return bool
      *
+     * @throws \InvalidArgumentException
      * @throws FlowdockApiException
      */
-    public function notify($rocketeer, $config, $connections, $eventTitle = NULL)
+    public function notify($rocketeer, $config, $connections, $eventTitle)
     {
         if ($eventTitle == NULL) {
-            $eventTitle = "There is currently no message configured";
+            throw new \InvalidArgumentException("Event Title is NULL and needs to have a content body to alert Flowdock");
         }
 
         $title = $this->formatEventTitle($rocketeer, $config, $connections, $eventTitle);
@@ -79,7 +80,10 @@ class RocketeerFlowdockMessage
         $response = $this->client->send($request);
 
         if ($response->getStatusCode() != 202) {
-            throw new FlowdockApiException("Error: HTTP " . $response->getStatusCode() . " with message " . $response->getReasonPhrase());
+            throw new FlowdockApiException(
+                "Error: HTTP " . $response->getStatusCode() .
+                " with message " . $response->getReasonPhrase()
+            );
         }
 
         return true;
