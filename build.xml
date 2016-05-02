@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Rocketeer-Flowdock" basedir="." default="build">
+
+    <target name="build" description="" depends="cs, phpunit" />
+
+    <target name="cs" description="Code Sniffer Tests">
+        <exec command="vendor/bin/phpcs -s --report=full --standard=ruleset.xml" checkreturn="true" logoutput="true" />
+    </target>
+
+    <target name="phpunit" description="Run PHPUnit Tests">
+        <exec command="vendor/bin/phpunit" dir="${project.basedir}" checkreturn="true" logoutput="true" passthru="true" />
+    </target>
+
+</project>
