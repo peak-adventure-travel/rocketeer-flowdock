@@ -2,11 +2,13 @@
 
 return [
 
-    // Flowdock channel defaults
+    // Flowdock
+    // Flow source tokens, follow README for how to generate these
     'source_tokens' => [
         '' => '',
     ],
-    'application' => '', // Leave blank to use default Rocketeer 'application_name'
+    // Leave the below blank to use default Rocketeer 'application_name'
+    'application' => '',
     'branch' => 'develop',
     'thread_title' => 'Rocketeer Deployment',
 
@@ -24,6 +26,6 @@ return [
     // :conn = Connection and stage
     'message_before' => ':user started deploying branch ":branch" on :repo :conn',
     'message_after' => ':user finished deploying branch ":branch" on :repo :conn',
-    'message_rollback' => 'Error! Rolling back branch ":branch" on :repo :conn',
+    'message_rollback' => 'Rolling back branch ":branch" on :repo :conn, view the rocketeer log file for more details',
 
 ];

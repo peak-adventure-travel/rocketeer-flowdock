@@ -4,7 +4,7 @@ namespace Rocketeer\Plugins\Flowdock;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 
 class RocketeerFlowdockMessage
 {
@@ -42,23 +42,33 @@ class RocketeerFlowdockMessage
     /**
      * Notifies the Flowdock channel of a deployment stage being initiated
      *
-     * @param \Rocketeer\Rocketeer $rocketeer
-     * @param \Illuminate\Config\Repository $config
-     * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
-     * @param String|null $eventTitle
-     *
-     * @return bool
-     *
-     * @throws \InvalidArgumentException
+     * @param string $branchName
+     * @param string $applicationName
+     * @param string $connectionName
+     * @param string $eventTitle
+     * @param string $threadTitle
+     * @return ResponseInterface
      * @throws FlowdockApiException
      */
-    public function notify($rocketeer, $config, $connections, $eventTitle)
+    public function notify($branchName, $applicationName, $connectionName, $eventTitle, $threadTitle)
     {
-        if ($eventTitle == null) {
-            throw new \InvalidArgumentException("Event Title is null and needs to have a content body to alert Flowdock");
+        if (empty($branchName)) {
+            throw new \InvalidArgumentException('branchName is an Invalid Argument');
+        }
+        if (empty($applicationName)) {
+            throw new \InvalidArgumentException('applicationName is an Invalid Argument');
+        }
+        if (empty($connectionName)) {
+            throw new \InvalidArgumentException('connectionName is an Invalid Argument');
+        }
+        if (empty($eventTitle)) {
+            throw new \InvalidArgumentException('eventTitle is an Invalid Argument');
+        }
+        if (empty($threadTitle)) {
+            throw new \InvalidArgumentException('threadTitle is an Invalid Argument');
         }
 
-        $title = $this->formatEventTitle($rocketeer, $config, $connections, $eventTitle);
+        $title = $this->formatEventTitle($branchName, $applicationName, $connectionName, $eventTitle);
 
         $body = json_encode([
             'flow_token' => $this->flowToken,
@@ -69,15 +79,17 @@ class RocketeerFlowdockMessage
             'title' => $title,
             'external_thread_id' => $this->externalThreadID,
             'thread' => [
-                'title' => $config->get('rocketeer-flowdock::thread_title'),
+                'title' => $threadTitle,
                 'body' => ''
             ]
         ]);
 
-        $headers = ['Content-Type' => 'application/json'];
+        $clientOptions = [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => $body
+        ];
 
-        $request = new Request('POST', self::MESSAGE_API, $headers, $body);
-        $response = $this->client->send($request);
+        $response = $this->client->post(self::MESSAGE_API, $clientOptions);
 
         if ($response->getStatusCode() != 202) {
             throw new FlowdockApiException(
@@ -86,41 +98,26 @@ class RocketeerFlowdockMessage
             );
         }
 
-        return true;
+        return $response;
     }
 
     /**
      * Formats the events title with variables as stated in the src/config/config.php
      *
-     * @param \Rocketeer\Rocketeer $rocketeer
-     * @param \Illuminate\Config\Repository $config
-     * @param \Rocketeer\Services\Connections\ConnectionsHandler $connections
+     * @param string $branchName
+     * @param string $applicationName
+     * @param string $connectionName
      * @param string $eventTitle
-     *
      * @return string
      */
-    private function formatEventTitle($rocketeer, $config, $connections, $eventTitle)
+    private function formatEventTitle($branchName, $applicationName, $connectionName, $eventTitle)
     {
-        $branch = null;
-        if ($rocketeer->getOption('branch') == '') {
-            $branch = $config->get('rocketeer-flowdock::branch');
-        } else {
-            $branch = $rocketeer->getOption('branch');
-        }
-
-        $application = null;
-        if ($config->get('rocketeer-flowdock::application') != '') {
-            $application = $config->get('rocketeer-flowdock::application');
-        } else {
-            $application = $rocketeer->getApplicationName();
-        }
-
         $pattern = ['(:user)', '(:branch)', '(:repo)', '(:conn)'];
         $replacements = [
             ':user' => get_current_user(),
-            ':branch' => $branch,
-            ':repo' => $application,
-            ':conn' => $connections->getConnection()
+            ':branch' => $branchName,
+            ':repo' => $applicationName,
+            ':conn' => $connectionName
         ];
 
         $eventTitle = preg_replace($pattern, $replacements, $eventTitle);
