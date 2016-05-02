@@ -12,7 +12,8 @@
     "phpunit/phpunit": "3.7.*",
     "mockery/mockery": "0.9.*",
     "phing/phing": "dev-master",
-    "squizlabs/php_codesniffer": "2.4.0"
+    "squizlabs/php_codesniffer": "2.4.0",
+    "phpmd/phpmd": "1.4.*"
   },
   "authors": [
     {
