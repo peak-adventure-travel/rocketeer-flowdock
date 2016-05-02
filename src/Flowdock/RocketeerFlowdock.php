@@ -9,7 +9,7 @@ use Rocketeer\Services\TasksHandler;
 class RocketeerFlowdock extends AbstractPlugin
 {
     /** @var string */
-    protected $externalThreadID = NULL;
+    protected $externalThreadID = null;
 
     /**
      * RocketeerFlowdock constructor
@@ -80,5 +80,4 @@ class RocketeerFlowdock extends AbstractPlugin
             }
         });
     }
-
 }

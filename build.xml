@@ -32,11 +32,11 @@
     </target>
 
     <target name="phpcs" description="Code Sniffer">
-        <exec command="vendor/bin/phpcs" checkreturn="true" logoutput="true">
+        <exec command="vendor/bin/phpcs --warning-severity=0 --report-width=120 --standard=PSR2 src/Flowdock" checkreturn="true" logoutput="true">
             <arg value="--warning-severity=0" />
             <arg value="--report-width=120" />
             <arg value="--standard=PSR2" />
-            <arg value="src/Flowdock" />
+            <arg path="src/Flowdock" />
         </exec>
     </target>
 

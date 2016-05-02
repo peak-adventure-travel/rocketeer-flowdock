@@ -13,13 +13,13 @@ class RocketeerFlowdockMessage
     const EXTERNAL_THREAD_ID_PREFIX = 'rocketeer:deploy:';
 
     /** @var string */
-    private $flowToken = NULL;
+    private $flowToken = null;
 
     /** @var ClientInterface */
-    private $client = NULL;
+    private $client = null;
 
     /** @var string */
-    private $externalThreadID = NULL;
+    private $externalThreadID = null;
 
     /**
      * RocketeerFlowdockMessage constructor
@@ -28,9 +28,9 @@ class RocketeerFlowdockMessage
      * @param string @external_thread_id The ID to pass to flowdock to allow for clustered notifications
      * @param ClientInterface $client HTTP Client Interface
      */
-    public function __construct($flowToken, $externalThreadID, ClientInterface $client = NULL)
+    public function __construct($flowToken, $externalThreadID, ClientInterface $client = null)
     {
-        if ($client == NULL) {
+        if ($client == null) {
             $client = new Client();
         }
 
@@ -54,8 +54,8 @@ class RocketeerFlowdockMessage
      */
     public function notify($rocketeer, $config, $connections, $eventTitle)
     {
-        if ($eventTitle == NULL) {
-            throw new \InvalidArgumentException("Event Title is NULL and needs to have a content body to alert Flowdock");
+        if ($eventTitle == null) {
+            throw new \InvalidArgumentException("Event Title is null and needs to have a content body to alert Flowdock");
         }
 
         $title = $this->formatEventTitle($rocketeer, $config, $connections, $eventTitle);
@@ -101,14 +101,14 @@ class RocketeerFlowdockMessage
      */
     private function formatEventTitle($rocketeer, $config, $connections, $eventTitle)
     {
-        $branch = NULL;
+        $branch = null;
         if ($rocketeer->getOption('branch') == '') {
             $branch = $config->get('rocketeer-flowdock::branch');
         } else {
             $branch = $rocketeer->getOption('branch');
         }
 
-        $application = NULL;
+        $application = null;
         if ($config->get('rocketeer-flowdock::application') != '') {
             $application = $config->get('rocketeer-flowdock::application');
         } else {
