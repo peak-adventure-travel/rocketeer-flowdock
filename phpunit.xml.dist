@@ -1,8 +1,4 @@
 <phpunit colors="true" bootstrap="vendor/autoload.php">
-    <php>
-        <env name="SOURCE_TOKEN" value="" />
-    </php>
-
     <testsuites>
         <testsuite name="rocketeer_flowdock_announcements">
             <directory>tests/</directory>
