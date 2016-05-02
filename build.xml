@@ -32,22 +32,11 @@
     </target>
 
     <target name="phpcs" description="Code Sniffer">
-        <exec command="vendor/bin/phpcs --warning-severity=0 --report-width=120 --standard=PSR2 src/Flowdock" checkreturn="true" logoutput="true">
-            <arg value="--warning-severity=0" />
-            <arg value="--report-width=120" />
-            <arg value="--standard=PSR2" />
-            <arg path="src/Flowdock" />
-        </exec>
+        <exec command="vendor/bin/phpcs --warning-severity=0 --report-width=120 --standard=PSR2 src/Flowdock" checkreturn="true" logoutput="true" />
     </target>
 
     <target name="phpmd" description="Mess Detector">
-        <exec command="vendor/bin/phpmd" checkreturn="true" logoutput="true">
-            <arg path="src" />
-            <arg value="text" />
-            <arg value="phpmdrules.xml" />
-            <arg value="--exclude" />
-            <arg value="config" />
-        </exec>
+        <exec command="vendor/bin/phpmd src text phpmdrules.xml --exclude config" checkreturn="true" logoutput="true" />
     </target>
 
     <target name="phpunit" description="PHPUnit Tests">
