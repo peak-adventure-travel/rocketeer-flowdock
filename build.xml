@@ -7,9 +7,9 @@
     <property name="project.rocketeer-flowdock.basedir" value="${project.basedir}"/>
     <property name="project.rocketeer-flowdock.giturl" value="git@github.com:peak-adventure-travel/rocketeer-flowdock.git"/>
 
-    <target name="build" description="" depends="clean,lint,phpcs,phpunit" />
+    <target name="build" description="Integration Build" depends="clean,lint,phpcs,phpmd,phpunit" />
 
-    <target name="clean" description="">
+    <target name="clean" description="Cleanup Build/Artifacts">
         <delete includeemptydirs="true">
             <fileset dir="${project.rocketeer-flowdock.basedir}/build/artifacts/">
                 <include name="**"/>
@@ -18,7 +18,7 @@
         </delete>
     </target>
 
-    <target name="lint" description="">
+    <target name="lint" description="Syntax Checker">
         <phplint haltonfailure="true">
             <fileset dir="${project.rocketeer-flowdock.basedir}/src">
                 <include name="*.php" />
@@ -40,7 +40,17 @@
         </exec>
     </target>
 
-    <target name="phpunit" description="Run PHPUnit Tests">
+    <target name="phpmd" description="Mess Detector">
+        <exec command="vendor/bin/phpmd" checkreturn="true" logoutput="true">
+            <arg path="src" />
+            <arg value="text" />
+            <arg value="phpmdrules.xml" />
+            <arg value="--exclude" />
+            <arg value="config" />
+        </exec>
+    </target>
+
+    <target name="phpunit" description="PHPUnit Tests">
         <exec command="vendor/bin/phpunit" dir="${project.rocketeer-flowdock.basedir}" checkreturn="true" logoutput="true" passthru="true" />
     </target>
 
