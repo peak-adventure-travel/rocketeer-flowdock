@@ -26,10 +26,24 @@ rocketeer plugin:config peak-adventure-travel/rocketeer-flowdock
 ```
 
 Then go into `.rocketeer/plugins/rocketeers/rocketeer-flowdock/config.php` and configure the variables to as you wish,
-you will require at least one source_token for this plugin to work.
+you will require at least one source_token for this plugin to work. (See `Retrieving your Source Token` below)
 
-## Testing (WIP)
+## Testing
+
+To run just the singular PHPUnit tests in tests/ type the following command :
 
 ```bash
-$ SOURCE_TOKEN=<source_token> phpunit
+$ vendor/bin/phing phpunit
 ```
+
+## Retrieving your Source Tokens
+
+1. Whilst in Flowdock select the flow (Channel) that you wish to add the announcements too,
+2. Click the cog wheel on the flow, and select Settings,
+3. On the new window, select the Integrations tab and search for "Rocketeer"
+4. Click on '+ Connect Rocketeer Deployment to Flowdock',
+5. On the new window, enter the name you wish to call this Integration (recommend: Rocketeer Deployment),
+6. Click the 'Create source' button,
+7. Store the source token that is generated and place it in the `config.php` file with an appropriate name.
+
+
