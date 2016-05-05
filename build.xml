@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Rocketeer-Flowdock" basedir="." default="build">
+
+    <!-- Sets the DSTAMP, TSTAMP, TODAY properties -->
+    <tstamp/>
+
+    <property name="project.rocketeer-flowdock.basedir" value="${project.basedir}"/>
+    <property name="project.rocketeer-flowdock.giturl" value="git@github.com:peak-adventure-travel/rocketeer-flowdock.git"/>
+
+    <target name="build" description="Integration Build" depends="clean,lint,phpcs,phpmd,phpunit" />
+
+    <target name="clean" description="Cleanup Build/Artifacts">
+        <delete includeemptydirs="true">
+            <fileset dir="${project.rocketeer-flowdock.basedir}/build/artifacts/">
+                <include name="**"/>
+                <exclude name=".gitkeep"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="lint" description="Syntax Checker">
+        <phplint haltonfailure="true">
+            <fileset dir="${project.rocketeer-flowdock.basedir}/src">
+                <include name="*.php" />
+                <include name="**/*.php" />
+                <include name="**/*.inc" />
+                <include name="**/*.module" />
+                <exclude name="**/vendor/**" />
+                <exclude name="**/*php4**" />
+            </fileset>
+        </phplint>
+    </target>
+
+    <target name="phpcs" description="Code Sniffer">
+        <exec command="vendor/bin/phpcs --warning-severity=0 --report-width=120 --standard=PSR2 src/Flowdock" checkreturn="true" logoutput="true" />
+    </target>
+
+    <target name="phpmd" description="Mess Detector">
+        <exec command="vendor/bin/phpmd src text phpmdrules.xml --exclude config" checkreturn="true" logoutput="true" />
+    </target>
+
+    <target name="phpunit" description="PHPUnit Tests">
+        <exec command="vendor/bin/phpunit" dir="${project.rocketeer-flowdock.basedir}" checkreturn="true" logoutput="true" passthru="true" />
+    </target>
+
+</project>
