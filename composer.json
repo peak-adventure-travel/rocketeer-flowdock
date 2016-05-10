@@ -1,18 +1,29 @@
 {
-    "name": "liamamos-intrepid/rocketeer-flowdock",
-    "description": "Flowdock notification plugin for Rocketeer",
-    "require": {
-        "php": ">=5.4.0",
-        "anahkiasen/rocketeer": "^2.2",
-        "illuminate/support": "~4.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.4"
-    },
-    "authors": [
-        {
-            "name": "Liam Amos",
-            "email": "liam.amos@intrepidtravel.com"
-        }
-    ]
+  "name": "peak-adventure-travel/rocketeer-flowdock",
+  "description": "Flowdock notification plugin for Rocketeer",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.4.0",
+    "anahkiasen/rocketeer": "^2.2",
+    "illuminate/support": "~4.2",
+    "guzzlehttp/guzzle": "^6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "mockery/mockery": "0.9.*",
+    "phing/phing": "2.14.*",
+    "squizlabs/php_codesniffer": "2.4.0",
+    "phpmd/phpmd": "2.4.*"
+  },
+  "authors": [
+    {
+      "name": "Liam Amos",
+      "email": "liam.amos@intrepidtravel.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rocketeer\\Plugins\\Flowdock\\": "src/Flowdock"
+    }
+  }
 }

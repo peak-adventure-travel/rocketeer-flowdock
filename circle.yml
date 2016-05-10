@@ -1,0 +1,22 @@
+machine:
+  php:
+    # for current production testing
+    version: 5.6.2
+
+dependencies:
+  pre:
+    # to prevent circleci from having memory errors
+    - echo "memory_limit = 512M" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
+    # update the php timezone for AU/Melbourne
+    - echo "date.timezone = 'Australia/Melbourne'" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/timezone.ini
+
+test:
+  pre:
+    # install composer dependencies to gain access to phing
+    - composer --dev install
+  override:
+    # run full test suite for coverage
+    - vendor/bin/phing build
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - if [ -d "build/artifacts/phpunit/junit" ]; then cp build/artifacts/phpunit/junit/*.xml $CIRCLE_TEST_REPORTS/junit/; fi

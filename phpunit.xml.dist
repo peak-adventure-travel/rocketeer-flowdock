@@ -1,0 +1,17 @@
+<phpunit colors="true" bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="rocketeer_flowdock_announcements">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html"
+             target="log/report"
+             charset="UTF-8"
+             yui="true"
+             hightlight="true"
+             lowUpperBound="35"
+             highLowerBound="70"/>
+    </logging>
+</phpunit>
