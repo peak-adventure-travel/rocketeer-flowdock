@@ -64,7 +64,7 @@ class RocketeerFlowdockMessageTest extends \PHPUnit_Framework_TestCase
         try {
             $message->notify(
                 'dummyBranch',
-                '',
+                $invalidValue,
                 'dummyConnection',
                 'dummyEventTitle',
                 'dummyThreadTitle'
@@ -92,7 +92,7 @@ class RocketeerFlowdockMessageTest extends \PHPUnit_Framework_TestCase
             $message->notify(
                 'dummyBranch',
                 'dummyApplication',
-                '',
+                $invalidValue,
                 'dummyEventTitle',
                 'dummyThreadTitle'
             );
@@ -120,7 +120,7 @@ class RocketeerFlowdockMessageTest extends \PHPUnit_Framework_TestCase
                 'dummyBranch',
                 'dummyApplication',
                 'dummyConnection',
-                '',
+                $invalidValue,
                 'dummyThreadTitle'
             );
             $this->fail(
@@ -148,7 +148,7 @@ class RocketeerFlowdockMessageTest extends \PHPUnit_Framework_TestCase
                 'dummyApplication',
                 'dummyConnection',
                 'dummyEventTitle',
-                ''
+                $invalidValue
             );
             $this->fail(
                 "An expected InvalidArgumentException was not thrown for invalid value " .
