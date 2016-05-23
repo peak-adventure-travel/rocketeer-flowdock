@@ -48,7 +48,7 @@ class RocketeerFlowdock extends AbstractPlugin
             foreach ($this->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
                 $message->notify(
-                    $this->rocketeer->getOption('branch'),
+                    $this->connections->getRepositoryBranch(),
                     $this->rocketeer->getApplicationName(),
                     $this->connections->getConnection(),
                     $this->config->get('rocketeer-flowdock::message_before'),
@@ -61,7 +61,7 @@ class RocketeerFlowdock extends AbstractPlugin
             foreach ($this->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
                 $message->notify(
-                    $this->rocketeer->getOption('branch'),
+                    $this->connections->getRepositoryBranch(),
                     $this->rocketeer->getApplicationName(),
                     $this->connections->getConnection(),
                     $this->config->get('rocketeer-flowdock::message_after'),
@@ -74,7 +74,7 @@ class RocketeerFlowdock extends AbstractPlugin
             foreach ($this->config->get('rocketeer-flowdock::source_tokens') as $sourceToken) {
                 $message = new RocketeerFlowdockMessage($sourceToken, $this->externalThreadID);
                 $message->notify(
-                    $this->rocketeer->getOption('branch'),
+                    $this->connections->getRepositoryBranch(),
                     $this->rocketeer->getApplicationName(),
                     $this->connections->getConnection(),
                     $this->config->get('rocketeer-flowdock::message_rollback'),
